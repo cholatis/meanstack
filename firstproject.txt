@@ -189,6 +189,390 @@ router.get('/profile', passport.authenticate('jwt', {session:false}), (req, res,
 });
 
 
+20) install angular cli
+npm install -g angular-cli
+ใช้คำสั่ง สร้าง folder พร้อม angular structure
+ng new angular-src
+ไปดู config ที่ angular-cli.json
+set output directory จาก dist => ../public
+ใช้คำสั่ง ng serve ต้องเข้าไปที่ path angular-cli เพื่อ compile 
+แล้วจะขึ้นมาที่ port 4200 (http://localhost:4200/)
+สามารถเปิด chrome และเปิด developer tool เพื่อใช้ command ได้
+เปิดไฟล์ app.module.ts ถ้าต้องการเพิ่ม service ให้เพิ่มไปใน declaration และส่วน provider
+แต่ถ้าเพิ่ม module ให้เพิ่มไปที่ imports
+
+21) ในส่วนของ src\app ถ้าจะเพิ่ม component ให้สร้าง folder components
+แล้วใช้ คำสั่ง ng g component navbar
+พอสร้างเสร็จจะทำการ update file app.module.ts ให้อัตโนมัติ
+ถ้าจะรู้ว่าเพิ่ม navbar แล้วใช้ได้ไหม ให้ลองไปเพิ่มใน app.component.html แล้วใส่ tag <app-navbar></app-navbar>
+ระบบจะไปเอาข้อมูลใน navbar.component.html มาใส่ใน tag ให้
+<p>
+  navbar works!
+</p>
+จากนั้นเข้าไปใน src\app\components
+แล้วใช้คำสั่ง
+ng g component register
+ng g component login
+ng g component dashboard
+ng g component home
+ng g component profile
+
+22) ไปที่ไฟล์ index.html จะมี
+<base href="/">
+จะเป็นตัวบอกว่า ตั้งต้นที่นี่
+และใส่ style sheet เข้าไป
+<link rel="stylesheet" href="https://bootswatch.com/sandstone/bootstrap.min.css">
+
+23) ไปที่ app.module.ts
+เพิ่ม router module
+import { RouterModule, Routes} from '@angular/router';
+
+แล้วทำการ init
+const appRoutes: Routes = [
+  {path:'', component: HomeComponent},
+  {path:'register', component: RegisterComponent},
+  {path:'login', component: LoginComponent},
+  {path:'dashboard', component: DashboardComponent},
+  {path:'profile', component: ProfileComponent}
+]
+
+แล้วเพิ่มไปใน imports
+RouterModule.forRoot(appRoutes)
+
+ไปที่ app.component.html แล้วเพิ่ม tag router-outlet
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+แล้วทำการทดสอบที่ 
+http://localhost:4200/  จะต้องมีคำว่า home works! ขึ้นมา
+http://localhost:4200/login มีคำว่า login works!
+http://localhost:4200/register มีคำว่า register works! 
+
+จากนั้นใส่ navbar จาก http://getbootstrap.com/examples/starter-template/
+แล้ว view source
+
+24) ทำการเขียน html ที่ page home.component.html
+
+25) ทำการ register component โดยการเพิ่มฟิลด์ไปที่ register.component.ts
+แล้วทำการสร้าง form
+แล้วใส่ attribute ของ input ที่เป็นชื่อให้ตรงกับชื่อที่ประกาศไว้ใน register.component.ts
+[(ngModel)]="name" name="name" เป็นต้น
+ตรง action ที่ form จะใช้
+(submit)="onRegisterSubmit()"
+ไปที่ register.component.ts
+เขียน function onRegisterSubmit
+
+26) สร้าง folder services ภายใต้ app
+ไปที่ folder src\app\services
+ใช้คำสั่ง ng g service validate
+ระบบจะสร้างไฟล์ validate.service.ts  ให้
+ไปที่ app.module.ts
+แล้วทำการ import service เข้าไป
+import { ValidateService} from './services/validate.service';
+เพิ่มเข้าไปในส่วน Providers 
+providers: [ValidateService]
+
+ไปที่ validate.service.ts แล้วเพิ่ม function เข้าไป
+  validateRegister(user) {
+    if(user.name == undefined || user.email == undefined || user.username == undefined || user.password == undefined ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  
+validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
+
+27) นำ service ไปใส่ใน register.component.ts
+import { ValidateService} from '../../services/validate.service';
+แล้วต้องไปประกาศใน contructor ทุกครั้งที่จะใช้ service
+constructor(private validateService: ValidateService) { }
+แล้วทำการ check
+    // Required Fields
+    if(!this.validateService.validateRegister(user)) {
+      console.log('Please fill in all fields');
+      return false;
+    }
+
+    
+// Validate Email
+    if(!this.validateService.validateEmail(user.email)) {
+      console.log('Please use a valid email');
+      return false;
+    }
+
+28) ทำการสร้าง flash message โดยใช้คำสั่ง
+npm install angular2-flash-messages --save
+ไปที่ app.module.ts เพื่อเพิ่ม module เข้าไป
+import { FlashMessagesModule} from 'angular2-flash-messages';
+แล้วเพิ่ม FlashMessagesModule ใน imports
+ไปที่ app.module.html เพื่อเพิ่ม outlet ที่ชื่อ flash-messages
+ไปที่ไฟล์ register.component.html
+แล้วทำการ import flash-messages เข้ามา
+import { FlashMessagesService} from 'angular2-flash-messages';
+จากนั้นทำการใส่ใน constructor
+constructor(private validateService: ValidateService, private flashMessage: FlashMessagesService) { }
+วิธีใช้ ดังนี้
+this.flashMessage.show('Please fill in all fields', {cssClass: 'alert-danger', timeout: 3000});
+
+
+29) ทำการเพิ่ม service auth เข้าไปใน folder services
+ng g service auth
+จะสร้าง auth.service.ts ขึ้นมา
+ทำการ import module HTTP เข้ามาใน service
+import { Http, Headers} from '@angular/http';
+
+import 'rxjs/add/operator/map';
+เพิ่มเข้าไปที่ constructor
+  constructor(private http:Http) { }
+
+ทำ service ไว้ดังนี้
+  registerUser(user) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/register', user, {headers: headers})
+    .map(res => res.json());
+  }
+
+30) ทำการนำ auth service เข้าไปที่ app.module.ts
+import { AuthService} from './services/auth.service';
+แล้วเพิ่มไปในส่วนของ providers
+providers: [ValidateService, AuthService],
+ไปที่ register.component.ts เพื่อเพิ่ม auth service เข้าไป
+import { AuthService} from '../../services/auth.service';
+แล้วทำการ init ใน constructor
+  constructor(
+    private validateService: ValidateService,
+    private flashMessage: FlashMessagesService,
+    private authService: AuthService
+
+  ) { }
+แล้วทำการ subscribe service
+this.authService.registerUser(user).subscribe(data => {
+});
+ถ้าต้องการให้ redirect page ต้อง import router เข้ามาด้วย 
+import { Router} from '@angular/router'; 
+ใส่ใน constructor
+  constructor(
+    private validateService: ValidateService,
+    private flashMessage: FlashMessagesService,
+    private authService: AuthService,
+    private router: Router
+
+  ) { }
+แล้วทำการ redirect โดยใช้
+this.router.navigate(['/login']);
+
+31) สร้าง form login ไปที่ login.component.html
+สร้าง form ที่มี user, password แล้ว submit 
+(submit)="onLoginSubmit()"
+
+ส่วนของฟิลด์ก็มี 
+[(ngModel)]="username" name="username"
+[(ngModel)]="password" name="password"
+ไปที่ login.component.ts
+สร้าง object user
+    const user={
+      username: this.username,
+      password: this.password
+    }
+ทำการ import AuthService
+import { AuthService} from '../../services/auth.service';
+ทำการ init ใน constructor
+  constructor(private authService:AuthService) { }
+
+เพิ่ม router และ flash message เข้ามา
+import { Router } from '@angular/router';
+
+import { FlashMessagesService } from 'anguar2-flash-messages';
+
+และใส่ไปใน constructor
+  constructor(
+    private authService:AuthService,
+    private router:Router,
+    private flashMessage:FlashMessagesService
+    ) { }
+ทำการเพิ่ม service ใน auth.service.ts
+  authenticateUser(user) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/authenticate', user, {headers: headers})
+    .map(res => res.json());
+  }
+
+  storeUserData(token, user) {
+    localStorage.setItem('id_token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    this.authToken = token;
+    this.user = user;
+  }
+
+ไปที่ login.service.ts
+    this.authService.authenticateUser(user).subscribe(data => {
+      console.log(data);
+      if(data.success) {
+        this.authService.storeUserData(data.token, data.user);
+        this.flashMessage.show('You are now logged in', {cssClass: 'alert-success', timeout: 5000});
+        this.router.navigate(['dashboard']);
+      } else {
+        this.flashMessage.show(data.msg, {cssClass: 'alert-danger', timeout: 5000});
+        this.router.navigate(['login']);
+      }
+    });
+
+ไปดูที่ Developer => Application ที่ local storage จะมี id_token กับ user อยู่ข้างใน
+
+32) ทำ function logout
+ไปที่ auth.service.ts เพิ่ม function logout
+  logout() {
+    this.authToken = null;
+    this.user = null;
+    localStorage.clear();
+  }
+
+ไปที่ navbar.component.html เพิ่ม logout link
+        <li><a (click)="onLogoutClick()" href="#">Logout</a></li>
+ไปที่ navbar.component.ts เพิ่ม function onLogoutClick
+  onLogoutClick() {
+    this.authService.logout();
+    this.flashMessage.show('You are logged out', {cssClass:'alert-success', timeout: 3000});
+    this.router.navigate(['/login']);
+    return false;
+  }
+
+ทำการ import 
+import { AuthService} from '../../services/auth.service';
+
+import { Router } from '@angular/router';
+
+import { FlashMessagesService } from 'angular2-flash-messages';
+
+ทำการ init ใน constructor
+  constructor(
+  private authService:AuthService,
+  private router:Router,
+  private flashMessage:FlashMessagesService
+  ) { }
+
+เมื่อ logout แล้วไปเช็คที่  Developer => Application ที่ local storage ตัว id_token กับ user จะหายไป
+
+33) สร้าง function getProfile(), loadToken() ใน auth.service.ts
+  loadToken() {
+    const token = localStorage.getItem('id_token');
+    this.authToken = token;
+  }
+  getProfile() {
+  let headers = new Headers();
+  this.loadToken();
+  headers.append('Authorization', this.authToken);
+  headers.append('Content-Type', 'application/json');
+  return this.http.get('http://localhost:3000/users/profile', {headers: headers})
+  .map(res => res.json());
+  }
+
+ทำการ import auth service และ router ไปไว้ใน profile.component.ts
+import { AuthService} from '../../services/auth.service';
+import { Router} from '@angular/router';
+ทำการ init constructor
+  constructor(private authService:AuthService, private router:Router) { }
+
+เพิ่ม code ลงใน ngOnInit()
+  user:Object;
+  ngOnInit() {
+    this.authService.getProfile().subscribe(profile => {
+      this.user = profile.user;
+    },
+    err => {
+      console.log(err);
+      return false;
+    }
+    );
+  }
+
+ทำการ เขียน profile.component.html
+<div *ngIf="user">
+  <h2 class="page-header">{{user.name}}</h2>
+  <ul class="list-group">
+    <li class="list-group-item">Username: {{user.username}}</li>
+    <li class="list-group-item">Email: {{user.email}}</li>
+  </ul>
+</div>
+
+34) Auth Guard ทำการ install angular2-jwt
+npm install angular2-jwt --save
+ไปที่ auth.service.ts เพิ่ม angular2-jwt เข้าไป
+import { tokenNotExpired} from 'angular2-jwt';
+
+  loggedIn() {
+    return tokenNotExpired('id_token');  }
+
+ไปที่ navbar.component.html 
+เพิ่มส่วน *ngIf="authService.loggedIn()" ถ้าจะแสดงกรณีมี token
+เพิ่มส่วน *ngIf="!authService.loggedIn()" ถ้าจะซ่อนกรณีมี token
+
+
+35) สร้าง Guard folder ใน src\app
+ศร้างไฟล์ auth.guard.ts
+import {Injectable} from '@angular/core';
+import {Router, CanActivate} from '@angular/router';
+import {AuthService} from '../services/auth.service';
+
+@Injectable()
+export class AuthGuard implements CanActivate{
+  constructor(private authService:AuthService, private router:Router) {}
+
+  canActivate() {
+    if(this.authService.loggedIn()) {
+      return true;
+    } else {
+      this.router.navigate(['/login']);
+      return false;
+    }
+  }
+}
+
+
+36) ไปที่ app.module.ts เพื่อ import AuthGuard
+import { AuthGuard} from './guards/auth.guard';
+แล้วไปกำหนด function ในตัว routes
+  {path:'dashboard', component: DashboardComponent, canActivate:[AuthGuard]},
+  
+{path:'profile', component: ProfileComponent, canActivate:[AuthGuard]}
+
+และไปเพิ่ม ที่ Provider
+providers: [ValidateService, AuthService, AuthGuard],
+
+37) ไปเพิ่ม code ใน dashboard
+<h2 class="page-header">Dashboard</h2>
+
+<p>Welcome to your dashboard</p>
+
+
+38) ไปที่ app.js
+// Any route go to index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'))
+});
+
+39) ทำการ compile code
+โดยใช้คำสั่ง ng build 
+เมื่อ build เสร็จจะไปอยู่ที่ outDir ที่ระบุใน angular-cli.json
+
+
+
+ 
+
+
+
+
+
+
+
 
 
 
