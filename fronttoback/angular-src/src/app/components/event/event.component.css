@@ -1,0 +1,67 @@
+div.gallery {
+    border: 1px solid #ccc;
+}
+
+div.gallery:hover {
+    border: 1px solid #777;
+}
+
+div.gallery img {
+    width: 100%;
+    height: auto;
+}
+
+@media only screen and (max-width: 1200px){
+    .responsive {
+        width: 99.99%;
+        margin: 6px 0;
+    }
+
+    .responsive2 {
+        width: 49.99%;
+        margin: 6px 0;
+    }
+
+    .responsive3 {
+        width: 49.99%;
+        margin: 6px 0;
+    }
+}
+
+.responsive {
+   padding: 0 6px;
+   float: left;
+   width: 49.99999%;
+}
+
+.responsive2 {
+  padding: 0 6px;
+  float: left;
+  width: 24.99999%;
+}
+
+.responsive3 {
+  padding: 0 6px;
+  float: left;
+  width: 33.3333%;
+}
+
+@media only screen and (max-width: 575px){
+    .responsive {
+        width: 100%;
+    }
+
+    .responsive2 {
+        width: 100%;
+    }
+
+    .responsive3 {
+        width: 100%;
+    }
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}

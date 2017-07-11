@@ -1,0 +1,39 @@
+<div class="container">
+<!--  <div class="responsive">
+  <div class="gallery">
+    <div >
+    <a href="https://www.wongnai.com/advertisements/741/target" target="_blank">
+      <img src="https://s3-ap-southeast-1.amazonaws.com/static.wongnai.com/ads/2017/KBank_Everyday_Dining2017_640x160px.jpg">
+    </a>
+    </div>
+  </div>
+  </div>
+
+  <div class="responsive">
+  <div class="gallery">
+    <div >
+<a href="https://www.wongnai.com/advertisements/848/target" target="_blank"><img src="https://s3-ap-southeast-1.amazonaws.com/static.wongnai.com/ads/2017/mali2640x160.jpg"></a>
+    </div>
+  </div>
+  </div>
+
+  <div class="responsive">
+  <div class="gallery">
+    <div >
+<a href="https://www.wongnai.com/advertisements/848/target" target="_blank"><img src="https://s3-ap-southeast-1.amazonaws.com/static.wongnai.com/ads/2017/mali2640x160.jpg"></a>
+    </div>
+  </div>
+</div>  -->
+<!--<img class="logo" src="{{imgPath + imgFileName}}" /> -->
+  <div *ngIf="showEvent" >
+    <div *ngFor="let event of events" class="responsive" (click)="toggleRestaurant()">
+    <div class="gallery">
+      <div >
+      <a href="#" target="_blank">
+        <img src="{{imgPath + event.imgname}}" title="{{event.eventname}}">
+      </a>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
