@@ -12,6 +12,9 @@ export class EventComponent implements OnInit {
   //imgFileName:string = "Banner_640x160px.jpg";
 
   events: Event[];
+  restaurants: Restaurant[];
+  event: Event;
+
 
   showEvent: boolean = true;
   showRestaurant: boolean = false;
@@ -34,8 +37,30 @@ export class EventComponent implements OnInit {
     );
   }
 
-  toggleRestaurant() {
+  toggleRestaurant(event) {
+    const reqevent={
+      eventid: event.id
+    }
 
+    console.log(event);
+    this.showEvent = false;
+    this.showRestaurant = true;
+    this.showResDetail = false;
+    this.showResForm = false;
+
+    this.eventService.getRestaurantList(reqevent).subscribe(restaurants => {
+      console.log(restaurants);
+      this.restaurants = restaurants;
+    },
+    err => {
+      console.log(err);
+      return false;
+    }
+    );
+  }
+
+  toggleRestaurantDetail(restaurant) {
+    console.log(restaurant);
   }
 
 }
@@ -46,4 +71,11 @@ interface Event {
   imgname: string;
   createuser: number;
   createdt: string;
+}
+
+interface Restaurant {
+  eventid: number;
+  restaurantid: number;
+  restaurantname: string;
+  imgname: string;
 }

@@ -26,14 +26,28 @@
 </div>  -->
 <!--<img class="logo" src="{{imgPath + imgFileName}}" /> -->
   <div *ngIf="showEvent" >
-    <div *ngFor="let event of events" class="responsive" (click)="toggleRestaurant()">
+    <div *ngFor="let event of events" class="responsive" (click)="toggleRestaurant(event)"  >
     <div class="gallery">
       <div >
-      <a href="#" target="_blank">
+      <a href="javascript:void(0)" >
         <img src="{{imgPath + event.imgname}}" title="{{event.eventname}}">
       </a>
       </div>
     </div>
+    </div>
+  </div>
+
+  <div *ngIf="showRestaurant" >
+    <div *ngFor="let restaurant of restaurants" class="responsive" (click)="toggleRestaurantDetail(restaurant)"  >
+      <div class="thumbnail2">
+        <img src="{{imgPath + restaurant.imgname}}" title="{{restaurant.restaurantname}}่" alt="{{restaurant.restaurantname}}">
+      </div>
+      <div class="desc">
+
+        <a href="javascript:void(0)">{{restaurant.restaurantname}}</a>
+        <p>ห้ามพลาด! กับสุดยอดมหกรรมด้านอาหาร ที่รวมเอาความสนุก ความรู้ และ ...</p>
+      </div>
+
     </div>
   </div>
 </div>

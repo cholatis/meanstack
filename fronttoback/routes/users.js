@@ -110,6 +110,22 @@ router.get('/eventname', (req, res, next) => {
   });
 });
 
+//restaurant list
+// JSON body
+//{
+//	"eventid": "1"
+//}
+router.post('/restaurantlist', (req, res, next) => {
+  mm.getRestaurant(req.body.eventid, function(err, val) {
+    if(err) throw err;
+
+    if(!val) {
+      return res.json({success: false, msg: 'Restaurant list return no data'});
+    }
+
+    res.json(val);
+  });
+});
 
 //Template node.js xx.xx.xx.xx/users/template
 router.get('/template', (req, res, next) => {

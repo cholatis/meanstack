@@ -40,6 +40,14 @@ module.exports.getEvent = function(callback) {
   });
 }
 
+module.exports.getRestaurant = function(selector, callback) {
+  mysqlcon.query('SELECT e.id as eventid, r.id as restaurantid, r.name as restaurantname, r.imgname as imgname FROM event e inner join eventrestaurant er on e.id=er.eventid inner join restaurant r on er.restaurantid = r.id WHERE e.id = ?', [selector], function(err, val) {
+    if(err) {
+      return callback(err);
+    }
+    callback(null, val);
+  });
+}
 
 module.exports.insLog = function(selector, selector2, selector3, selector4, callback) {
   mysqlcon.query('INSERT INTO log(logdesc, logtype, logmsg, createdt) VALUES (?, ?, ?, ?)', [selector, selector2, selector3, selector4], function(err, val) {

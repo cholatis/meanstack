@@ -16,4 +16,10 @@ export class EventService {
   .map(res => res.json());
   }
 
+  getRestaurantList(eventid) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://127.0.0.1:8080/users/restaurantlist', eventid, {headers: headers})
+    .map(res => res.json());
+  }
 }

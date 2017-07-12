@@ -11,6 +11,24 @@ div.gallery img {
     height: auto;
 }
 
+div.thumbnail2 {
+  border: none;
+  position: relative;
+
+}
+
+div.thumbnail2 img {
+  display: block;
+      float: left;
+      width: 72px;
+      height: 72px;
+      border-radius: 3px;
+}
+div.desc {
+  padding: 2px 8px 5px;
+    overflow: hidden;
+}
+
 @media only screen and (max-width: 1200px){
     .responsive {
         width: 99.99%;
